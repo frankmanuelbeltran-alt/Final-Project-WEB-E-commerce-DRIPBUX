@@ -1,0 +1,5 @@
+{
+  "name": "DripBux",
+  "description": "A simulated online clothing store where users buy real-world fashion items using mock Robux balance, featuring realistic checkout and delivery tracking.",
+  "requestFramePermissions": []
+}
