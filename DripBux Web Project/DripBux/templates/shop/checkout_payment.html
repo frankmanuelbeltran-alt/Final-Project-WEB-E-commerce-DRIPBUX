@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Payment - DripBux{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Checkout Progress -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="position-relative" style="width: 300px;">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                    <div class="position-absolute top-0 start-0 translate-middle bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;"><i class="bi bi-check"></i></div>
+                    <div class="position-absolute top-0 start-50 translate-middle bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;"><i class="bi bi-check"></i></div>
+                    <div class="position-absolute top-0 start-100 translate-middle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">3</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="fw-bold mb-0">Payment</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                You are paying with Robux. This is a mock currency for simulation purposes.
+                            </div>
+
+                            <div class="card bg-light mb-4">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">Your Robux Balance</h6>
+                                            <h3 class="mb-0 text-primary">{{ balance }} Robux</h3>
+                                        </div>
+                                        <i class="bi bi-coin display-4 text-warning"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if not has_sufficient_funds %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Insufficient Robux balance. You need {{ final_total - balance }} more Robux.
+                                <br>
+                                <a href="{{ url_for('auth.profile') }}" class="alert-link">Go to profile to earn more Robux</a>
+                            </div>
+                            {% endif %}
+
+                            <form method="POST" action="">
+                                {{ form.hidden_tag() }}
+
+                                <div class="mb-4">
+                                    <h6 class="fw-bold mb-3">Order Total: {{ final_total }} Robux</h6>
+
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Subtotal</span>
+                                        <span>{{ subtotal }} Robux</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Shipping</span>
+                                        <span>{{ shipping_fee }} Robux</span>
+                                    </div>
+                                    {% if discount > 0 %}
+                                    <div class="d-flex justify-content-between mb-2 text-success">
+                                        <span>Discount</span>
+                                        <span>-{{ discount }} Robux</span>
+                                    </div>
+                                    {% endif %}
+                                    <hr>
+                                    <div class="d-flex justify-content-between fw-bold">
+                                        <span>Total</span>
+                                        <span class="text-primary">{{ final_total }} Robux</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 form-check">
+                                    {{ form.confirm_payment(class="form-check-input") }}
+                                    {{ form.confirm_payment.label(class="form-check-label") }}
+                                    {% if form.confirm_payment.errors %}
+                                    <div class="text-danger small">{{ form.confirm_payment.errors[0] }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <a href="{{ url_for('shop.checkout_delivery') }}" class="btn btn-outline-secondary">Back</a>
+                                    <button type="submit" class="btn btn-primary flex-grow-1 btn-lg" {{ 'disabled' if not has_sufficient_funds }}>
+                                        <i class="bi bi-lock me-2"></i>Complete Purchase
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card sticky-top" style="top: 100px;">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Order Summary</h6>
+                            {% for item in cart.items %}
+                            <div class="d-flex justify-content-between mb-2">
+                                <small>{{ item.product.name }} x{{ item.quantity }}</small>
+                                <small>{{ item.get_subtotal() }} Robux</small>
+                            </div>
+                            {% endfor %}
+                            <hr>
+                            <div class="d-flex justify-content-between mb-2">
+                                <small>Subtotal</small>
+                                <small>{{ subtotal }} Robux</small>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <small>Shipping</small>
+                                <small>{{ shipping_fee }} Robux</small>
+                            </div>
+                            {% if discount > 0 %}
+                            <div class="d-flex justify-content-between mb-2 text-success">
+                                <small>Discount</small>
+                                <small>-{{ discount }} Robux</small>
+                            </div>
+                            {% endif %}
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total</span>
+                                <span class="text-primary">{{ final_total }} Robux</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

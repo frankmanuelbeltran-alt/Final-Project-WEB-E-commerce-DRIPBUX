@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - DripBux{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Admin Dashboard</h2>
+        <span class="badge bg-danger">Admin: {{ current_user.username }}</span>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Total Users</h6>
+                            <h3 class="mb-0">{{ total_users }}</h3>
+                        </div>
+                        <i class="bi bi-people display-4 text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Total Products</h6>
+                            <h3 class="mb-0">{{ total_products }}</h3>
+                        </div>
+                        <i class="bi bi-box display-4 text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-white-50">Total Orders</h6>
+                            <h3 class="mb-0">{{ total_orders }}</h3>
+                        </div>
+                        <i class="bi bi-cart-check display-4 text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-dark-50">Total Revenue</h6>
+                            <h3 class="mb-0">{{ total_revenue }} Robux</h3>
+                        </div>
+                        <i class="bi bi-coin display-4 text-dark-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Orders -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">Recent Orders</h5>
+                    <a href="{{ url_for('admin.orders') }}" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td><a href="{{ url_for('admin.order_detail', order_id=order.id) }}">{{ order.order_number }}</a></td>
+                                    <td>{{ order.user.username }}</td>
+                                    <td>{{ order.final_total }} Robux</td>
+                                    <td><span class="badge bg-{{ 'warning' if order.status == 'pending' else 'info' if order.status == 'shipped' else 'success' if order.status == 'delivered' else 'secondary' }}">{{ order.status.title() }}</span></td>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="{{ url_for('admin.create_product') }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-plus-circle me-2"></i>Add New Product
+                        </a>
+                        <a href="{{ url_for('admin.orders') }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-box me-2"></i>Manage Orders
+                            {% if pending_orders > 0 %}
+                            <span class="badge bg-danger float-end">{{ pending_orders }}</span>
+                            {% endif %}
+                        </a>
+                        <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-people me-2"></i>Manage Users
+                        </a>
+                        <a href="{{ url_for('admin.promo_codes') }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-tag me-2"></i>Promo Codes
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Low Stock Alert -->
+            {% if low_stock %}
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Low Stock Alert</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for item in low_stock %}
+                        <li class="mb-2">
+                            <a href="{{ url_for('admin.edit_product_sizes', product_id=item.product_id) }}">
+                                {{ item.product.name }} ({{ item.size }}): {{ item.stock }} left
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

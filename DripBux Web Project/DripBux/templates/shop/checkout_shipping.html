@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Shipping - DripBux{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- Progress -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="position-relative" style="width: 300px;">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="position-absolute top-0 start-0 translate-middle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">1</div>
+                    <div class="position-absolute top-0 start-50 translate-middle bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">2</div>
+                    <div class="position-absolute top-0 start-100 translate-middle bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">3</div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- LEFT -->
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="fw-bold mb-0">Shipping Information</h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <!-- SAVED ADDRESSES -->
+                            {% if addresses %}
+                            <h6 class="mb-3">Saved Addresses</h6>
+                            <div class="row mb-4">
+                                {% for address in addresses %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100 address-card"
+                                         onclick="selectAddress(event, { address,id })"
+                                         style="cursor: pointer;">
+                                        <div class="card-body">
+                                            <strong>{{ address.full_name }}</strong><br>
+                                            {{ address.phone }}<br>
+                                            {{ address.address_line1 }}<br>
+                                            {% if address.address_line2 %}
+                                                {{ address.address_line2 }}<br>
+                                            {% endif %}
+                                            {{ address.city }}, {{ address.postal_code }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            {% endif %}
+
+                            <!-- FORM -->
+                            <h6 class="mb-3">Or Enter New Address</h6>
+
+                            <form method="POST" action="">
+                                {{ form.hidden_tag() }}
+
+                                <!-- hidden selected address -->
+                                <input type="hidden" name="selected_address" id="selected_address">
+
+                                <div class="mb-3">
+                                    {{ form.full_name.label(class="form-label") }}
+                                    {{ form.full_name(class="form-control") }}
+                                </div>
+
+                                <div class="mb-3">
+                                    {{ form.phone.label(class="form-label") }}
+                                    {{ form.phone(class="form-control") }}
+                                </div>
+
+                                <div class="mb-3">
+                                    {{ form.address_line1.label(class="form-label") }}
+                                    {{ form.address_line1(class="form-control") }}
+                                </div>
+
+                                <div class="mb-3">
+                                    {{ form.address_line2.label(class="form-label") }}
+                                    {{ form.address_line2(class="form-control") }}
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.city.label(class="form-label") }}
+                                        {{ form.city(class="form-control") }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.postal_code.label(class="form-label") }}
+                                        {{ form.postal_code(class="form-control") }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 form-check">
+                                    {{ form.is_default(class="form-check-input") }}
+                                    {{ form.is_default.label(class="form-check-label") }}
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        Continue to Delivery
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-md-4">
+                    <div class="card sticky-top" style="top: 100px;">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Order Summary</h6>
+
+                            {% for item in cart.items %}
+                            <div class="d-flex justify-content-between mb-2">
+                                <small>{{ item.product.name }} ({{ item.size.size }}) x{{ item.quantity }}</small>
+                                <small>{{ item.get_subtotal() }} Robux</small>
+                            </div>
+                            {% endfor %}
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-bold">Subtotal</span>
+                                <span class="fw-bold">{{ cart.get_subtotal() }} Robux</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectAddress(event, addressId) {
+    document.getElementById('selected_address_id').value = addressId;
+
+    document.querySelectorAll('.address-card').forEach(card => {
+        card.classList.remove('border-primary');
+    });
+
+    event.currentTarget.classList.add('border-primary');
+}
+</script>
+
+{% endblock %}

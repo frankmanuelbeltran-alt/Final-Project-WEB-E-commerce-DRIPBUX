@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Delivery - DripBux{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Checkout Progress -->
+            <div class="d-flex justify-content-center mb-4">
+                <div class="position-relative" style="width: 300px;">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar" style="width: 50%"></div>
+                    </div>
+                    <div class="position-absolute top-0 start-0 translate-middle bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;"><i class="bi bi-check"></i></div>
+                    <div class="position-absolute top-0 start-50 translate-middle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">2</div>
+                    <div class="position-absolute top-0 start-100 translate-middle bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">3</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="fw-bold mb-0">Delivery Method</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="">
+                                {{ form.hidden_tag() }}
+
+                                <div class="mb-4">
+                                    {{ form.delivery_type.label(class="form-label fw-bold") }}
+                                    {% for subfield in form.delivery_type %}
+                                    <div class="form-check card p-3 mb-2">
+                                        {{ subfield(class="form-check-input") }}
+                                        {{ subfield.label(class="form-check-label fw-bold") }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="mb-4">
+                                    {{ form.promo_code.label(class="form-label") }}
+                                    <div class="input-group">
+                                        {{ form.promo_code(class="form-control", placeholder="Enter promo code") }}
+                                        <button type="button" class="btn btn-outline-secondary" onclick="applyPromo()">Apply</button>
+                                    </div>
+                                    <div id="promo-message" class="form-text"></div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <a href="{{ url_for('shop.checkout_shipping') }}" class="btn btn-outline-secondary">Back</a>
+                                    <button type="submit" class="btn btn-primary flex-grow-1">Continue to Payment</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card sticky-top" style="top: 100px;">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Order Summary</h6>
+
+                            <div class="mb-3">
+                                <small class="text-muted">Shipping to:</small>
+                                <p class="mb-0">{{ address.full_name }}</p>
+                                <p class="mb-0">{{ address.city }}</p>
+                            </div>
+
+                            <hr>
+
+                            {% for item in cart.items %}
+                            <div class="d-flex justify-content-between mb-2">
+                                <small>{{ item.product.name }} x{{ item.quantity }}</small>
+                                <small>{{ item.get_subtotal() }} Robux</small>
+                            </div>
+                            {% endfor %}
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal</span>
+                                <span>{{ subtotal }} Robux</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-bold">Total</span>
+                                <span class="fw-bold text-primary" id="summary-total">{{ subtotal }} Robux</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function applyPromo() {
+    const code = document.getElementById('promo_code').value;
+    if (code) {
+        document.getElementById('promo-message').textContent = 'Promo code will be validated at checkout';
+        document.getElementById('promo-message').className = 'form-text text-success';
+    }
+}
+</script>
+{% endblock %}

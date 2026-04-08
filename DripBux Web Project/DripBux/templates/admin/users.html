@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - DripBux Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <h2 class="fw-bold mb-4">Users</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Robux Balance</th>
+                            <th>Orders</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>
+                                {{ user.username }}
+                                {% if user.is_admin %}
+                                <span class="badge bg-danger">Admin</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <span class="robux-badge py-1 px-2">
+                                    <i class="bi bi-coin"></i> {{ user.robux_balance }}
+                                </span>
+                            </td>
+                            <td>{{ user.orders|length }}</td>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#adjustRobux{{ user.id }}">
+                                    Adjust Robux
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Adjust Robux Modal -->
+                        <div class="modal fade" id="adjustRobux{{ user.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Adjust Robux for {{ user.username }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <form action="{{ url_for('admin.adjust_robux', user_id=user.id) }}" method="POST">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <div class="modal-body">
+                                            <p>Current Balance: <strong>{{ user.robux_balance }} Robux</strong></p>
+                                            <div class="mb-3">
+                                                <label class="form-label">Amount (use negative to deduct)</label>
+                                                <input type="number" name="amount" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Reason</label>
+                                                <input type="text" name="reason" class="form-control" value="Admin adjustment">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

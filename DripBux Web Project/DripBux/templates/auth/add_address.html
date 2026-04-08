@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Add Address - DripBux{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Add New Address</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.full_name.label(class="form-label") }}
+                            {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else "")) }}
+                            {% if form.full_name.errors %}
+                            <div class="invalid-feedback">{{ form.full_name.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.phone.label(class="form-label") }}
+                            {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+                            {% if form.phone.errors %}
+                            <div class="invalid-feedback">{{ form.phone.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.address_line1.label(class="form-label") }}
+                            {{ form.address_line1(class="form-control" + (" is-invalid" if form.address_line1.errors else "")) }}
+                            {% if form.address_line1.errors %}
+                            <div class="invalid-feedback">{{ form.address_line1.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.address_line2.label(class="form-label") }}
+                            {{ form.address_line2(class="form-control" + (" is-invalid" if form.address_line2.errors else "")) }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.city.label(class="form-label") }}
+                                {{ form.city(class="form-control" + (" is-invalid" if form.city.errors else "")) }}
+                                {% if form.city.errors %}
+                                <div class="invalid-feedback">{{ form.city.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.postal_code.label(class="form-label") }}
+                                {{ form.postal_code(class="form-control" + (" is-invalid" if form.postal_code.errors else "")) }}
+                                {% if form.postal_code.errors %}
+                                <div class="invalid-feedback">{{ form.postal_code.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            {{ form.is_default(class="form-check-input") }}
+                            {{ form.is_default.label(class="form-check-label") }}
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Save Address</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

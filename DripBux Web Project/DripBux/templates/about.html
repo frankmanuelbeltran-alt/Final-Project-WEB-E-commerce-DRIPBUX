@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}About - DripBux{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h1 class="fw-bold mb-4">About DripBux</h1>
+
+                    <p class="lead">DripBux is a Flask-based e-commerce simulation where users buy real clothing like shirts, hoodies, pants, and accessories using a mock Robux currency.</p>
+
+                    <hr class="my-4">
+
+                    <h4 class="fw-bold mb-3">Project Details</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Realistic checkout process with shipping info</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Delivery tracking simulation</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Robux-based payment system</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Wishlist and review system</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i>Admin panel for management</li>
+                    </ul>
+
+                    <hr class="my-4">
+
+                    <h4 class="fw-bold mb-3">Created By</h4>
+                    <p><strong>Frank Manuel Beltran</strong></p>
+                    <p class="text-muted">Admin Username: frankmanuelbeltran_alt</p>
+
+                    <hr class="my-4">
+
+                    <h4 class="fw-bold mb-3">Tech Stack</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Backend</h6>
+                            <ul>
+                                <li>Flask (Python)</li>
+                                <li>Flask-Login</li>
+                                <li>Flask-SQLAlchemy</li>
+                                <li>Flask-WTF</li>
+                                <li>Flask-Migrate</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Frontend</h6>
+                            <ul>
+                                <li>HTML5 with Jinja2</li>
+                                <li>Bootstrap 5</li>
+                                <li>JavaScript</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="bi bi-info-circle me-2"></i>
+                        This is a simulation project for educational purposes. No real transactions occur.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

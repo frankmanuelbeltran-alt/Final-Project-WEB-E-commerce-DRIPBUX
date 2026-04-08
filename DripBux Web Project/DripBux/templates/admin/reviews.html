@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Reviews - DripBux Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <h2 class="fw-bold mb-4">Product Reviews</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>User</th>
+                            <th>Rating</th>
+                            <th>Title</th>
+                            <th>Comment</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.product.name }}</td>
+                            <td>{{ review.user.username }}</td>
+                            <td>
+                                {% for i in range(5) %}
+                                <i class="bi bi-star{{ '-fill' if i < review.rating else '' }} text-warning"></i>
+                                {% endfor %}
+                            </td>
+                            <td>{{ review.title or '-' }}</td>
+                            <td>{{ review.comment[:50] }}...</td>
+                            <td>{{ review.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <form action="{{ url_for('admin.delete_review', review_id=review.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this review?')">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

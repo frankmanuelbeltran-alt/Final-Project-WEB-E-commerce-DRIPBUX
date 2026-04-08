@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Sizes - {{ product.name }} - DripBux Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h4 class="fw-bold mb-4">Manage Sizes: {{ product.name }}</h4>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">Add Size</h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.size.label(class="form-label") }}
+                            {{ form.size(class="form-select") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.stock.label(class="form-label") }}
+                            {{ form.stock(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.price_modifier.label(class="form-label") }}
+                            {{ form.price_modifier(class="form-control") }}
+                            <small class="text-muted">Additional cost for this size</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Add/Update Size</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">Current Sizes</h6>
+                </div>
+                <div class="card-body">
+                    {% if product.sizes %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Size</th>
+                                    <th>Stock</th>
+                                    <th>Price Modifier</th>
+                                    <th>Total Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for size in product.sizes %}
+                                <tr>
+                                    <td><span class="badge bg-primary fs-6">{{ size.size }}</span></td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if size.stock > 5 else 'warning' if size.stock > 0 else 'danger' }}">
+                                            {{ size.stock }} in stock
+                                        </span>
+                                    </td>
+                                    <td>{{ size.price_modifier }} Robux</td>
+                                    <td>{{ size.get_total_price() }} Robux</td>
+                                    <td>
+                                        <form action="{{ url_for('admin.delete_size', size_id=size.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this size?')">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No sizes added yet. Add sizes to make this product available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('admin.products') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Back to Products
+        </a>
+    </div>
+</div>
+{% endblock %}
