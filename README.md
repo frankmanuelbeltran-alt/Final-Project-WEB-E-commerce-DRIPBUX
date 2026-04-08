@@ -116,7 +116,7 @@ python app.py
 ```
 DripBux/
 ├── app.py                 # Main application file
-├── extensions.py          # DB extension SQLSchema                
+├── extensions.py          # DB extension SQALchemy               
 ├── models.py              # Database models
 ├── forms.py               # WTForms classes
 ├── requirements.txt       # Python dependencies
