@@ -108,9 +108,6 @@ python app.py
 
 6. Open your browser and go to `http://localhost:5000`
 
-## Default Admin Account
-- Username: `frankmanuelbeltran_alt`
-- Password: `admin123`
 
 ## Project Structure
 ```
